@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, StyleSheet, Text,  TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, Text,  TouchableOpacity, View } from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Input from '@/components/Input';
@@ -8,10 +8,72 @@ import { useNavigation } from '@react-navigation/native';
 import icons from '@/constants/icons';
 import { Colors } from '@/constants/Colors';
 import Checkbox from 'expo-checkbox';
+import axios from 'axios';
 
 export default function LoginScreen() {
-    const navigation = useNavigation();
-  const [isChecked, setChecked]=useState(false)
+  const navigation = useNavigation();
+  const [isChecked, setChecked] = useState(false);
+  const [email, setEmail] = useState('');
+  const [emailVerify,setEmailVerify] =useState(false);
+  const [password, setPassword] = useState('');
+  const [passwordVerify,setPasswordVerify]=useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+
+  function handleEmail(email:string){
+    setEmail(email)
+    setEmailVerify(false)
+    if(/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{1,}$/.test(email)){
+      setEmail(email)
+      setEmailVerify(true)
+    }
+  }
+
+  function handlePassword(password:string){
+    setPassword(password)
+    setPasswordVerify(false)
+    if(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/.test(password)){
+      setPassword(password);
+      setPasswordVerify(true)
+    }
+  }
+  const handleLogin = async () => {
+        if ( email.length < 1 || !emailVerify || password.length < 1 || !passwordVerify ) {
+      setError('Please fill out all fields correctly.');
+      return;
+  }
+    setLoading(true);
+    setError('');
+    try {
+      const response = await axios.post('https://backend-app-umnt.onrender.com/login', {
+        email,
+        password,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 200) {
+        console.log('Login successful:', response.data);
+        // @ts-ignore
+        navigation.navigate('screen/UserScreen'); 
+      } else {
+        console.error('Unexpected response status:', response.status);
+        setError('Login failed');
+      }
+    } catch (error:any) {
+      console.error('Login error:', error);
+      if (error.response && error.response.data) {
+        setError(error.response.data.message);
+      } else {
+        setError('An error occurred during login');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
     return (
     
     <View style={styles.container}>
@@ -39,13 +101,28 @@ onPress={()=> navigation.navigate ('screen/home')}>
         <Text style={styles.formTxt}>Email/Username</Text>
         <Input
         placeholder="Please Enter Your Email"
+        value={email}
+        onChangeText={handleEmail}
       />
+              {email.length<1 ? null:emailVerify ?null:(
+    <Text
+    style={{
+      marginLeft:10,
+      color:'red',
+    }}
+    >
+      Enter Proper Email Address
+    </Text>
+  )}
     </View>
 
     <View >
         <Text style={styles.formTxt}>Password</Text>
         <Input
         placeholder="Please Enter Your Password"
+        isPasword={true}
+        value={password}
+        onChangeText={handlePassword}
       />
     </View>
 
@@ -77,17 +154,27 @@ onPress={()=> navigation.navigate ('screen/ForgotScreen')}
 </View>
 </KeyboardAwareScrollView>
 <View>
-<Button
-title='Sign in'
- // @ts-ignore
-onPress={()=> navigation.navigate ('screen/SignupScreen')}
-/>
+
+
+{error ? (
+          <Text style={{ color: 'red', textAlign: 'center', marginBottom: 10 }}>{error}</Text>
+        ) : null}
+
+        <Button
+          title={loading ? 
+          <ActivityIndicator
+          color={'white'}
+          size={'small'}
+          />
+            : 'Sign in'}
+          onPress={handleLogin}
+          disabled={loading}
+        />
       <Text style={styles.otherTxt}>Or using other method</Text>
       <View style={styles.otherMethodCont} >
         <View style={styles.otherMethod}>
             <View>
             <Image source={icons.google}/>
-
             </View>
             <View>
             <Text>Continue with Google</Text>

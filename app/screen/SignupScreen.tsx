@@ -7,7 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function SignupScreen() {
@@ -109,12 +109,13 @@ export default function SignupScreen() {
 
     if (response.status === 201) {
         console.log('Signup successful:', response.data);
-        // Handle successful signup
+               // @ts-ignore
+               navigation.navigate('screen/LoginScreen');
     } else {
         console.error('Unexpected response status:', response.status);
         setError('Signup failed');
     }
-} catch (error) {
+} catch (error:any) {
     console.error('Signup error:', error);
     if (error.response && error.response.data) {
         setError(error.response.data.message);
@@ -279,7 +280,12 @@ onPress={()=> navigation.navigate ('screen/home')}>
 
 
 <Button
-                        title={loading ? 'Creating account...' : 'Create account'}
+                        title={loading ?          
+                           <ActivityIndicator
+                          color={'white'}
+                          size={'small'}
+                          /> 
+                          : 'Create account'}
                         onPress={handleSignup}
                         disabled={loading}
                     />

@@ -10,6 +10,7 @@ import register from './screen/register';
 import SignupScreen from './screen/SignupScreen';
 import LoginScreen from './screen/LoginScreen';
 import ForgotScreen from './screen/ForgotScreen';
+import UserScreen from './screen/UserScreen';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 const Stack = createStackNavigator();
@@ -36,10 +37,13 @@ export default function RootLayout() {
         <Stack.Screen name="screen/SignupScreen" component={SignupScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="screen/LoginScreen" component={LoginScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="screen/ForgotScreen" component={ForgotScreen} options={{ headerShown: false }}/>
+        {/* <Stack.Screen name="screen/HomeScreen" component={HomeScreen} options={{ headerShown: false }}/> */}
+        <Stack.Screen name="screen/UserScreen" component={UserScreen} options={{ headerShown: false }}/>
+
 
 
 
       </Stack.Navigator>
-  );
+  )
 }
 
