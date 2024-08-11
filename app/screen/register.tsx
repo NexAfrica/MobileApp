@@ -83,9 +83,9 @@ width:30,
 <Button
 title='Register'
 icon={dashedArrow}
-// onPress={()=> navigation.navigate ('screen/SignupScreen')}
+
 onPress={() => {
-  // Move to the next slide
+ 
   if (sliderRef.current) {
     const currentIndex = sliderRef.current.state.activeIndex;
     const nextIndex = currentIndex + 1;
