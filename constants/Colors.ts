@@ -10,9 +10,7 @@ export const Colors = {
   light: {
     textPrimary: '#1F6721',
     textSecondary: 'white',
-
     backgroundColor: "#1F6721",
-
     tint: tintColorLight,
     icon: '#687076',
     tabIconDefault: '#687076',
