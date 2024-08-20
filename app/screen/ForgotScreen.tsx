@@ -10,7 +10,7 @@ export default function ForgotScreen() {
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.header}>
+      <View style={styles.header}>
         <View>
           <TouchableOpacity
             onPress={() => {
@@ -46,7 +46,7 @@ export default function ForgotScreen() {
         title="Continue"
         // @ts-ignore
         onPress={() => navigation.navigate("screen/SignupScreen")}
-      /> */}
+      />
     </View>
   );
 }
